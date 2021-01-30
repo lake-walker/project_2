@@ -1,16 +1,16 @@
 // Create and set the svg elements
-var svgWidth = 960;
-var svgHeight = 700;
+// var svgWidth = 960;
+// var svgHeight = 700;
 
-var margin = {
-    top: 20,
-    right: 40,
-    bottom: 60,
-    left: 50
-};
+// var margin = {
+//     top: 20,
+//     right: 40,
+//     bottom: 60,
+//     left: 50
+// };
 
-var width = svgWidth - margin.left - margin.right;
-var height = svgHeight - margin.top - margin.bottom;
+// var width = svgWidth - margin.left - margin.right;
+// var height = svgHeight - margin.top - margin.bottom;
 
 // funcion to return marker size based on suicides
 // function markerSize(suicides) {
@@ -18,8 +18,8 @@ var height = svgHeight - margin.top - margin.bottom;
 // }
 
 var myMap = L.map('map', {
-    center: [45.52, -122.67],
-    zoom: 13
+    center: [51.4934, 0.0098],
+    zoom: 2
 });
 
 // Add a tile layer (the background map image) to our map
