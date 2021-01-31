@@ -95,82 +95,122 @@ d3.csv('country_data.csv').then(function(data) {
 
 // Bubble chart with D3 selection
 // Create and set the svg elements
-var svgWidth = 960;
-var svgHeight = 700;
+function makeResponsive() {
+    var svgArea = d3.select('body').select('svg');
+    if (!svgArea.empty()) {
+        svgArea.remove();
+    }
 
-var margin = {
-    top: 20,
-    right: 40,
-    bottom: 60,
-    left: 50
-};
+    var svgWidth = 960;
+    var svgHeight = 700;
 
-var width = svgWidth - margin.left - margin.right;
-var height = svgHeight - margin.top - margin.bottom;
+    var margin = {
+        top: 20,
+        right: 40,
+        bottom: 60,
+        left: 50
+    };
 
-var svg = d3.select('#scatter')
-    .append('svg')
-    .attr('width', svgWidth)
-    .attr('height', svgHeight);
+    var width = svgWidth - margin.left - margin.right;
+    var height = svgHeight - margin.top - margin.bottom;
 
-var chartGroup = svg.append('g')
-    .attr('transform', `translate(${margin.left}, ${margin.right})`);
+    var svg = d3.select('#scatter')
+        .append('svg')
+        .attr('width', svgWidth)
+        .attr('height', svgHeight);
 
-d3.csv('country_data.csv').then(function(data) {
-    //parse data/cast as numbers
-    data.forEach(d => {
-        d.total_suicides_no = +d.total_suicides_no;
-        d.happiness_score = +d.happiness_score;
+    var chartGroup = svg.append('g')
+        .attr('transform', `translate(${margin.left}, ${margin.right})`);
+
+    d3.csv('country_data.csv').then(function(data) {
+        //parse data/cast as numbers
+        data.forEach(d => {
+            d.total_suicides_no = +d.total_suicides_no;
+            d.happiness_score = +d.happiness_score;
+        });
+
+        // Create scale functions
+        var xLinearScale = d3.scaleLinear()
+            .domain([4, d3.max(data, d => d.happiness_score)])
+            .range([0, width]);
+
+        var yLinearScale = d3.scaleLinear()
+            .domain([0, d3.max(data, d=> d.total_suicides_no)])
+            .range([height, 0]);
+        
+        // Create axis functions
+        var bottomAxis = d3.axisBottom(xLinearScale);
+        var leftAxis = d3.axisLeft(yLinearScale);
+
+        // Append Axes to the chartGroup
+        chartGroup.append('g')
+            .attr('transform', `translate(0, ${height})`)
+            .call(bottomAxis);
+        
+        chartGroup.append('g')
+            .call(leftAxis);
+
+        // Create Circles
+        var circlesGroup = chartGroup.selectAll('circle')
+            .data(data)
+            .enter()
+            .append('circle')
+            .attr('cx', d => xLinearScale(d.happiness_score))
+            .attr('cy', d => yLinearScale(d.total_suicides_no))
+            .attr('r', '10') // Could make circles different sizes based on other variables
+            .attr('fill', 'blue')
+            .attr('opacity', '.5');
+        
+        // Create Axes labels
+        chartGroup.append('text')
+            .attr('transform', 'rotate(-90)')
+            .attr('y', 0 - margin.left)
+            .attr('x', 0 - (height/2))
+            .attr('dy', '1em')
+            .attr('class', 'axisText')
+            .text('Total Suicides Number');
+        
+        chartGroup.append('text')
+            .attr('transform', `translate(${width / 2}, ${height + margin.top + 30})`)
+            .attr('class', 'axisText')
+            .text('Happiness Index');
+        
+        // Append a div to the body to create tooltips
+        var toolTip = d3.select('body').append('div').attr('class', 'tooltip');
+
+        // var toolTip = d3.tip()
+        //     .attr('class', 'tooltip')
+        //     .offset([80,-60])
+        //     .html(function(d) {
+        //         return (`Country: <strong>${data[i].country}</strong>`);
+        //     });
+        
+        // chartGroup.call(toolTip);
+
+        // circlesGroup.on('mouseover', function(d) {
+        //     toolTip.show(d, this);
+        // })
+        //     .on('mouseout', function(d) {
+        //         toolTip.hide(d);
+        //     });
+
+        // add an onmouseover event to display a tooltip
+        circlesGroup.on('mouseover', function(d, i) {
+            toolTip.style('display', 'block');
+            toolTip.html(`Country: <strong>${data[i].country}</strong>`)
+                .style('left', d3.event.pageX + 'px')
+                .style('top', d3.event.pageY + 'px');
+        })
+            .on('mouseout', function() {
+                toolTip.style('display', 'none');
+            });
+        
+        
+    }).catch(function(error) {
+        console.log(error);
     });
+}
 
-    // Create scale functions
-    var xLinearScale = d3.scaleLinear()
-        .domain([4, d3.max(data, d => d.happiness_score)])
-        .range([0, width]);
+makeResponsive();
 
-    var yLinearScale = d3.scaleLinear()
-        .domain([0, d3.max(data, d=> d.total_suicides_no)])
-        .range([height, 0]);
-    
-    // Create axis functions
-    var bottomAxis = d3.axisBottom(xLinearScale);
-    var leftAxis = d3.axisLeft(yLinearScale);
-
-    // Append Axes to the chartGroup
-    chartGroup.append('g')
-        .attr('transform', `translate(0, ${height})`)
-        .call(bottomAxis);
-    
-    chartGroup.append('g')
-        .call(leftAxis);
-
-    // Create Circles
-    var circlesGroup = chartGroup.selectAll('circle')
-        .data(data)
-        .enter()
-        .append('circle')
-        .attr('cx', d => xLinearScale(d.happiness_score))
-        .attr('cy', d => yLinearScale(d.total_suicides_no))
-        .attr('r', '10') // Could make circles different sizes based on other variables
-        .attr('fill', 'blue')
-        .attr('opacity', '.5');
-    
-    // Create Axes labels
-    chartGroup.append('text')
-        .attr('transform', 'rotate(-90')
-        .attr('y', 0 - margin.left)
-        .attr('x', 0 - (height/2))
-        .attr('dy', '1em')
-        .attr('class', 'axisText')
-        .text('Total Suicides Number');
-    
-    chartGroup.append('text')
-        .attr('transform', `translate(${width / 2}, ${height + margin.top + 30})`)
-        .attr('class', 'axisText')
-        .text('Happiness Index');
-}).catch(function(error) {
-    console.log(error);
-});
-
-
-
+d3.select(window).on('resize', makeResponsive);
