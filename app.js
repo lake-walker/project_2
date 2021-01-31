@@ -1,17 +1,5 @@
-// Create and set the svg elements
-// var svgWidth = 960;
-// var svgHeight = 700;
 
-// var margin = {
-//     top: 20,
-//     right: 40,
-//     bottom: 60,
-//     left: 50
-// };
-
-// var width = svgWidth - margin.left - margin.right;
-// var height = svgHeight - margin.top - margin.bottom;
-
+// Map section of app creation
 // funcion to return marker size based on suicides
 function SuicideMarkerSize(score) {
     return score * 10;
@@ -103,5 +91,86 @@ d3.csv('country_data.csv').then(function(data) {
 //   id: "mapbox/streets-v11",
 //   accessToken: API_KEY
 // });
+
+
+// Bubble chart with D3 selection
+// Create and set the svg elements
+var svgWidth = 960;
+var svgHeight = 700;
+
+var margin = {
+    top: 20,
+    right: 40,
+    bottom: 60,
+    left: 50
+};
+
+var width = svgWidth - margin.left - margin.right;
+var height = svgHeight - margin.top - margin.bottom;
+
+var svg = d3.select('#scatter')
+    .append('svg')
+    .attr('width', svgWidth)
+    .attr('height', svgHeight);
+
+var chartGroup = svg.append('g')
+    .attr('transform', `translate(${margin.left}, ${margin.right})`);
+
+d3.csv('country_data.csv').then(function(data) {
+    //parse data/cast as numbers
+    data.forEach(d => {
+        d.total_suicides_no = +d.total_suicides_no;
+        d.happiness_score = +d.happiness_score;
+    });
+
+    // Create scale functions
+    var xLinearScale = d3.scaleLinear()
+        .domain([4, d3.max(data, d => d.happiness_score)])
+        .range([0, width]);
+
+    var yLinearScale = d3.scaleLinear()
+        .domain([0, d3.max(data, d=> d.total_suicides_no)])
+        .range([height, 0]);
+    
+    // Create axis functions
+    var bottomAxis = d3.axisBottom(xLinearScale);
+    var leftAxis = d3.axisLeft(yLinearScale);
+
+    // Append Axes to the chartGroup
+    chartGroup.append('g')
+        .attr('transform', `translate(0, ${height})`)
+        .call(bottomAxis);
+    
+    chartGroup.append('g')
+        .call(leftAxis);
+
+    // Create Circles
+    var circlesGroup = chartGroup.selectAll('circle')
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr('cx', d => xLinearScale(d.happiness_score))
+        .attr('cy', d => yLinearScale(d.total_suicides_no))
+        .attr('r', '10') // Could make circles different sizes based on other variables
+        .attr('fill', 'blue')
+        .attr('opacity', '.5');
+    
+    // Create Axes labels
+    chartGroup.append('text')
+        .attr('transform', 'rotate(-90')
+        .attr('y', 0 - margin.left)
+        .attr('x', 0 - (height/2))
+        .attr('dy', '1em')
+        .attr('class', 'axisText')
+        .text('Total Suicides Number');
+    
+    chartGroup.append('text')
+        .attr('transform', `translate(${width / 2}, ${height + margin.top + 30})`)
+        .attr('class', 'axisText')
+        .text('Happiness Index');
+}).catch(function(error) {
+    console.log(error);
+});
+
 
 
