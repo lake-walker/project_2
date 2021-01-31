@@ -10,14 +10,13 @@ html {
 }
 
 body {
-  /* Padding bottom by footer height */
   padding-bottom: 0px;
 }
 
 #footer {
-  position: absolute;
+  position: relative;
   bottom: 0;
-  width: 100%; /* Set the fixed height of the footer here */
+  width: 100%; 
   height: 10px;
   padding-top: 20px;
   padding-bottom: 40px;
@@ -35,19 +34,18 @@ body {
 body,
 html {
   height: 700px;
-  /* width: 500px; */
 }
 /* ToolTip */
 .tooltip {
   position: absolute;
-  width: 135px;
-  height: 60px;
-  padding: 2px;
-  padding-top: 8px;
+  width: 80px;
+  height: 50px;
+  padding: 10px;
   font: 12px sans-serif;
-  color: white;
   text-align: center;
-  background: #551aaf;
+  color: white;
+  background: blue;
   border: 0;
   border-radius: 10px;
+  display: 'box';
 }

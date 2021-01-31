@@ -213,4 +213,6 @@ function makeResponsive() {
 
 makeResponsive();
 
-d3.select(window).on('resize', makeResponsive);
+d3.select(svgArea).on('resize', makeResponsive);
+
+ 
