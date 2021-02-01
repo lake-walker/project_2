@@ -124,7 +124,16 @@
   
 //   // When the browser window is resized, makeResponsive() is called.
 //   d3.select(window).on("resize", makeResponsive);
-
+// d3.csv("country_data.csv").then(function(countryData) {
+//     d3.select("tbody")
+//     .selectAll("tr")
+//     .data(countryData)
+//     .enter()
+//     .append("tr")
+//     .html(function(d) {
+//         return `<td>${d.country}</td><td>${d.economy_gdp_per_capita_2015}</td><td>${d.sui_per_100k_2015}</td><td>${d.happiness_score_2015}</td>`;
+//     });
+// });
 
 
 
@@ -204,6 +213,8 @@ function updateToolTip(chosenXAxis, circlesGroup) {
     label = "GDP per Capita";
   }
 
+//   var body = ;
+
   var toolTip = d3.tip()
     .attr("class", "tooltip")
     .offset([80, -60])
@@ -234,6 +245,7 @@ d3.csv("country_data.csv").then(function(countryData, err) {
     data.happiness_score_2015 = +data.happiness_score_2015;
     data.sui_per_100k_2015 = +data.sui_per_100k_2015;
     data.economy_gdp_per_capita_2015 = +data.economy_gdp_per_capita_2015;
+    data.human_development_index = +data.human_development_index;
   });
 
   // xLinearScale function above csv import
@@ -287,6 +299,13 @@ d3.csv("country_data.csv").then(function(countryData, err) {
     .classed("inactive", true)
     .text("GDP per Capita (2015)");
 
+    var hdiLabel = labelsGroup.append("text")
+        .attr("x", 0)
+        .attr("y", 60)
+        .attr("value", "human_development_index") // value to grab for event listener
+        .classed("inactive", true)
+        .text("Human Development Index");
+
   // append y axis
   chartGroup.append("text")
     .attr("transform", "rotate(-90)")
@@ -332,12 +351,29 @@ d3.csv("country_data.csv").then(function(countryData, err) {
             happinessLabel
                 .classed("active", false)
                 .classed("inactive", true);
+            hdiLabel
+                .classed("active", false)
+                .classed("inactive", true);
+        }
+        else if (chosenXAxis === 'happiness_score_2015') {
+            gdpLabel
+                .classed("active", false)
+                .classed("inactive", true);
+            happinessLabel
+                .classed("active", true)
+                .classed("inactive", false);
+            hdiLabel
+                .classed("active", false)
+                .classed("inactive", true);
         }
         else {
             gdpLabel
                 .classed("active", false)
                 .classed("inactive", true);
             happinessLabel
+                .classed("active", false)
+                .classed("inactive", true);
+            hdiLabel
                 .classed("active", true)
                 .classed("inactive", false);
         }
