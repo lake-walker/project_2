@@ -7,13 +7,16 @@ function SuicideMarkerSize(score) {
 function HappinessMarkerSize(happy) {
     return happy * 10000;
 }
+function gdpMarkerSize(happy) {
+    return happy * 100000;
+}
 
 
 
 // Define arrays to hold created country markers 
 var suicideMarkers = [];
 var happinessMarkers = [];
-
+var gdpMarkers = [];
 
 
 
@@ -24,8 +27,8 @@ d3.csv('country_data.csv').then(function(data) {
             L.circle([data[i].latitude, data[i].longitude], {
                 stroke: false,
                 fillOpacity: 0.75,
-                color: 'white',
-                fillColor: 'white',
+                color: 'red',
+                fillColor: 'red',
                 radius: SuicideMarkerSize(data[i].sui_per_100k_2015)
             })
         );
@@ -37,6 +40,16 @@ d3.csv('country_data.csv').then(function(data) {
                 color: 'purple',
                 fillColor: 'purple',
                 radius: HappinessMarkerSize(data[i].happiness_score_2015)
+            })
+        );
+
+        gdpMarkers.push(
+            L.circle([data[i].latitude, data[i].longitude], {
+                stroke: false,
+                fillOpacity: 0.75,
+                color: 'green',
+                fillColor: 'green',
+                radius: gdpMarkerSize(data[i].economy_gdp_per_capita_2015)
             })
         );
     }
@@ -60,6 +73,7 @@ d3.csv('country_data.csv').then(function(data) {
     // create seperate layer groups
     var suicides = L.layerGroup(suicideMarkers);
     var happiness = L.layerGroup(happinessMarkers);
+    var gdp = L.layerGroup(gdpMarkers);
     
     var baseMaps = {
         'Street Map': streetmap,
@@ -68,13 +82,14 @@ d3.csv('country_data.csv').then(function(data) {
     
     var overlayMaps = {
         'Suicide Number': suicides,
-        'Happiness Score': happiness
+        'Happiness Score': happiness,
+        'GDP per Capita': gdp
     };
     
     var myMap = L.map('map', {
         center: [51.4934, 0.0098],
         zoom: 2,
-        layers: [streetmap, suicides, happiness]
+        layers: [streetmap, suicides, happiness, gdp]
     });
     
     L.control.layers(baseMaps, overlayMaps, {
