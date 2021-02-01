@@ -2,7 +2,7 @@
 // Map section of app creation
 // funcion to return marker size based on suicides
 function SuicideMarkerSize(score) {
-    return score * 10;
+    return score * 10000;
 }
 function HappinessMarkerSize(happy) {
     return happy * 10000;
@@ -26,7 +26,7 @@ d3.csv('country_data.csv').then(function(data) {
                 fillOpacity: 0.75,
                 color: 'white',
                 fillColor: 'white',
-                radius: SuicideMarkerSize(data[i].total_suicides_no)
+                radius: SuicideMarkerSize(data[i].sui_per_100k_2015)
             })
         );
 
@@ -36,7 +36,7 @@ d3.csv('country_data.csv').then(function(data) {
                 fillOpacity: 0.75,
                 color: 'purple',
                 fillColor: 'purple',
-                radius: HappinessMarkerSize(data[i].happiness_score)
+                radius: HappinessMarkerSize(data[i].happiness_score_2015)
             })
         );
     }
