@@ -10,6 +10,9 @@ function HappinessMarkerSize(happy) {
 function gdpMarkerSize(happy) {
     return happy * 100000;
 }
+function hdiMarkerSize(happy) {
+    return happy * 100000;
+}
 
 
 
@@ -17,7 +20,7 @@ function gdpMarkerSize(happy) {
 var suicideMarkers = [];
 var happinessMarkers = [];
 var gdpMarkers = [];
-
+var hdiMarkers = [];
 
 
 d3.csv('country_data.csv').then(function(data) {
@@ -30,7 +33,8 @@ d3.csv('country_data.csv').then(function(data) {
                 color: 'red',
                 fillColor: 'red',
                 radius: SuicideMarkerSize(data[i].sui_per_100k_2015)
-            })
+            }).bindPopup("<h3>" + data[i].country +
+                "</h3><hr><p>" + data[i].sui_per_100k_2015 + "</p>")
         );
 
         happinessMarkers.push(
@@ -40,7 +44,8 @@ d3.csv('country_data.csv').then(function(data) {
                 color: 'purple',
                 fillColor: 'purple',
                 radius: HappinessMarkerSize(data[i].happiness_score_2015)
-            })
+            }).bindPopup("<h3>" + data[i].country +
+                "</h3><hr><p>" + data[i].sui_per_100k_2015 + "</p>")
         );
 
         gdpMarkers.push(
@@ -50,7 +55,19 @@ d3.csv('country_data.csv').then(function(data) {
                 color: 'green',
                 fillColor: 'green',
                 radius: gdpMarkerSize(data[i].economy_gdp_per_capita_2015)
-            })
+            }).bindPopup("<h3>" + data[i].country +
+             "</h3><hr><p>" + 'Suicides per 100k: ' + data[i].sui_per_100k_2015 + "</p>")
+        );
+
+        hdiMarkers.push(
+            L.circle([data[i].latitude, data[i].longitude], {
+                stroke: false,
+                fillOpacity: 0.75,
+                color: 'yellow',
+                fillColor: 'yellow',
+                radius: hdiMarkerSize(data[i].human_development_index)
+            }).bindPopup("<h3>" + data[i].country +
+             "</h3><hr><p>" + 'Suicides per 100k: ' + data[i].sui_per_100k_2015 + "</p>")
         );
     }
     // Streetmap Layer
@@ -59,7 +76,7 @@ d3.csv('country_data.csv').then(function(data) {
         tileSize: 512,
         maxZoom: 18,
         zoomOffset: -1,
-        id: "mapbox/streets-v11",
+        id: "mapbox/light-v10",
         accessToken: API_KEY
     });
   
@@ -74,6 +91,7 @@ d3.csv('country_data.csv').then(function(data) {
     var suicides = L.layerGroup(suicideMarkers);
     var happiness = L.layerGroup(happinessMarkers);
     var gdp = L.layerGroup(gdpMarkers);
+    var hdi = L.layerGroup(hdiMarkers);
     
     var baseMaps = {
         'Street Map': streetmap,
@@ -83,13 +101,14 @@ d3.csv('country_data.csv').then(function(data) {
     var overlayMaps = {
         'Suicide Number': suicides,
         'Happiness Score': happiness,
-        'GDP per Capita': gdp
+        'GDP per Capita': gdp,
+        'Human Development Index': hdi
     };
     
     var myMap = L.map('map', {
         center: [51.4934, 0.0098],
         zoom: 2,
-        layers: [streetmap, suicides, happiness, gdp]
+        layers: [streetmap, suicides, happiness, gdp, hdi]
     });
     
     L.control.layers(baseMaps, overlayMaps, {

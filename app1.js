@@ -215,18 +215,30 @@ function updateToolTip(chosenXAxis, circlesGroup) {
 
 //   var body = ;
 
-  var toolTip = d3.tip()
-    .attr("class", "tooltip")
-    .offset([80, -60])
-    .html(function(d) {
-      return (`${d.country}<br>${label} ${d[chosenXAxis]}`);
-    });
+    var toolTip = d3.tip()
+        .attr("class", "tooltip")
+        .offset([80, -60])
+        .html(function(d) {
+        return (`${d.country}<br>${label} ${d[chosenXAxis]}`);
+        });
+    // var table = d3.select("tbody")
+    //     .selectAll("tr")
+    //     .data(countryData)
+    //     .enter()
+    //     .append("tr")
+    //     .html(function(d) {
+    //         return `<td>${d.country}</td><td>${d.economy_gdp_per_capita_2015}</td><td>${d.sui_per_100k_2015}</td><td>${d.happiness_score_2015}</td>`;
+    //     });
 
   circlesGroup.call(toolTip);
+//   circlesGroup.call(table);
 
-  circlesGroup.on("click", function(data) {
+  circlesGroup.on("mouseover", function(data) {
     toolTip.show(data);
   })
+    // .on('click', function(data) {
+    //     table.show(data);
+    // })
     // onmouseout event
     .on("mouseout", function(data, index) {
       toolTip.hide(data);
@@ -277,8 +289,9 @@ d3.csv("country_data.csv").then(function(countryData, err) {
     .append("circle")
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d.sui_per_100k_2015))
-    .attr("r", 20)
+    .attr("r", 10)
     .attr("fill", "pink")
+    .attr('text', d => d.country)
     .attr("opacity", ".5");
 
   // Create group for two x-axis labels
@@ -379,6 +392,6 @@ d3.csv("country_data.csv").then(function(countryData, err) {
         }
       }
     });
-}).catch(function(error) {
-    console.log(error)
 });
+
+
