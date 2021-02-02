@@ -138,8 +138,8 @@
 
 
 
-var svgWidth = 960;
-var svgHeight = 500;
+var svgWidth = 2000;
+var svgHeight = 1000;
 
 var margin = {
   top: 20,
@@ -209,8 +209,11 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   if (chosenXAxis === "happiness_score_2015") {
     label = "2015 Happiness Index Score";
   }
-  else {
+  else if (chosenXAxis === "economy_gdp_per_capita_2015") {
     label = "GDP per Capita";
+  }
+  else {
+    label = 'Human Development Index';
   }
 
 //   var body = ;
@@ -219,7 +222,7 @@ function updateToolTip(chosenXAxis, circlesGroup) {
         .attr("class", "tooltip")
         .offset([80, -60])
         .html(function(d) {
-        return (`${d.country}<br>${label} ${d[chosenXAxis]}`);
+        return (`${d.country}<br>${label} ${d[chosenXAxis]}<br>Suicides per 100k:  ${d.sui_per_100k_2015}<br>Happiness Rank: ${d.happiness_rank_2015}<br>HDI Rank: ${d.hdi_rank}`);
         });
     // var table = d3.select("tbody")
     //     .selectAll("tr")
@@ -233,18 +236,30 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   circlesGroup.call(toolTip);
 //   circlesGroup.call(table);
 
-  circlesGroup.on("mouseover", function(data) {
+  circlesGroup.on("click", function(data) {
     toolTip.show(data);
   })
-    // .on('click', function(data) {
-    //     table.show(data);
-    // })
     // onmouseout event
-    .on("mouseout", function(data, index) {
-      toolTip.hide(data);
-    });
+  //   .on("mouseout", function(data, index) {
+  //     toolTip.hide(data);
+  // });
 
   return circlesGroup;
+}
+
+// Create functions to assign colors to the different regions
+function getColor(d) {
+  return d == 'Australia and New Zealand' ? '#00FFFF' :
+        d == 'Central and Eastern Europe'  ? '#0000FF' :
+        d == 'Eastern Asia'  ? '#00A36C' :
+        d == 'Latin America and Caribbean'   ? '#CCCCFF' :
+        d == 'Middle East and Northern Africa'   ? '#E97451' :
+        d == 'North America'   ? '#800000' :
+        d == 'Southeastern Asia'   ? '#097969' :
+        d == 'Southern Asia'   ? '#90EE90' :
+        d == 'Sub-Saharan Africa'   ? '#CC5500' :
+        d == 'Western Europe'   ? '#DC143C' :
+                    '#00FF00';
 }
 
 // Retrieve data from the CSV file and execute everything below
@@ -290,7 +305,7 @@ d3.csv("country_data.csv").then(function(countryData, err) {
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d.sui_per_100k_2015))
     .attr("r", 10)
-    .attr("fill", "pink")
+    .attr("fill", d => getColor(d.region))
     .attr('text', d => d.country)
     .attr("opacity", ".5");
 
