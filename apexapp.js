@@ -74,18 +74,19 @@ var chart = c3.generate({
     data: {
         url: 'region_data.csv',
         type: 'bar',
-        // x: 'region',
-        // columns: [
-        //     ['region', 'Australia and New Zealand','Central and Eastern Europe','Eastern Asia','Latin America and Caribbean','Middle East and Northern Africa','North America','Southeastern Asia','Southern Asia','Sub-Saharan Africa','Western Europe']
-        // ]
+        x: 'region',
+        columns: [
+            ['region', 'Australia and New Zealand','Central and Eastern Europe','Eastern Asia','Latin America and Caribbean','Middle East and Northern Africa','North America','Southeastern Asia','Southern Asia','Sub-Saharan Africa','Western Europe']
+        ]
     },
     axis: {
         x: {
-            type: 'bar',
-            tick: {
-                fit: true,
-                values: ['Australia and New Zealand','Central and Eastern Europe','Eastern Asia','Latin America and Caribbean','Middle East and Northern Africa','North America','Southeastern Asia','Southern Asia','Sub-Saharan Africa','Western Europe']
-            }
+            type: 'category',
+            categories: ['Australia and New Zealand','Central and Eastern Europe','Eastern Asia','Latin America and Caribbean','Middle East and Northern Africa','North America','Southeastern Asia','Southern Asia','Sub-Saharan Africa','Western Europe'],
+            // tick: {
+            //     fit: true,
+            //     values: ['Australia and New Zealand','Central and Eastern Europe','Eastern Asia','Latin America and Caribbean','Middle East and Northern Africa','North America','Southeastern Asia','Southern Asia','Sub-Saharan Africa','Western Europe']
+            // }
         }
     }
 });
