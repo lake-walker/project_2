@@ -41,13 +41,14 @@
 //     data: {
 //         data: {
 //             url: 'country_data.csv', 
-//             type: 'bar'
+//             labels: true,
+//             filter: function (t) {
+//                 return 
+//             }
+//             type: 'bar',
 //         },
-//         columns: [
-//             ['GDP', url.economy_gdp_per_capita_2015],
-//             ['HDI', url.human_development_index]
-//         ],
-//         type: 'bar'
+        
+        
 //     },
 //     bar: {
 //         width: {
@@ -61,7 +62,7 @@
 // setTimeout(function () {
 //     chart.load({
 //         columns: [
-//             ['Suicides per 100k', url.sui_per_100k_2015]
+//             ['Suicides per 100k', sui_per_100k_2015]
 //         ]
 //     });
 // }, 1000);
@@ -71,7 +72,20 @@
 
 var chart = c3.generate({
     data: {
-        url: 'country_data.csv',
-        type: 'bar'
+        url: 'region_data.csv',
+        type: 'bar',
+        // x: 'region',
+        // columns: [
+        //     ['region', 'Australia and New Zealand','Central and Eastern Europe','Eastern Asia','Latin America and Caribbean','Middle East and Northern Africa','North America','Southeastern Asia','Southern Asia','Sub-Saharan Africa','Western Europe']
+        // ]
+    },
+    axis: {
+        x: {
+            type: 'bar',
+            tick: {
+                fit: true,
+                values: ['Australia and New Zealand','Central and Eastern Europe','Eastern Asia','Latin America and Caribbean','Middle East and Northern Africa','North America','Southeastern Asia','Southern Asia','Sub-Saharan Africa','Western Europe']
+            }
+        }
     }
 });
