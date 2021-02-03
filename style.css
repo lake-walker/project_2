@@ -38,13 +38,13 @@ html {
 /* ToolTip */
 .tooltip {
   position: absolute;
-  width: 80px;
-  height: 50px;
+  width: 150px;
+  height: 100px;
   padding: 10px;
   font: 12px sans-serif;
   text-align: center;
-  color: white;
-  background: blue;
+  color: black;
+  background: gray;
   border: 0;
   border-radius: 10px;
   display: 'box';

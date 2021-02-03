@@ -216,11 +216,11 @@ function updateToolTip(chosenXAxis, circlesGroup) {
     label = 'Human Development Index';
   }
 
-//   var body = ;
+  // var body = ;
 
     var toolTip = d3.tip()
         .attr("class", "tooltip")
-        .offset([80, -60])
+        .offset([100, 80])
         .html(function(d) {
         return (`${d.country}<br>${label} ${d[chosenXAxis]}<br>Suicides per 100k:  ${d.sui_per_100k_2015}<br>Happiness Rank: ${d.happiness_rank_2015}<br>HDI Rank: ${d.hdi_rank}`);
         });
@@ -240,9 +240,9 @@ function updateToolTip(chosenXAxis, circlesGroup) {
     toolTip.show(data);
   })
     // onmouseout event
-  //   .on("mouseout", function(data, index) {
-  //     toolTip.hide(data);
-  // });
+    .on("mouseout", function(data, index) {
+      toolTip.hide(data);
+    });
 
   return circlesGroup;
 }
@@ -251,16 +251,22 @@ function updateToolTip(chosenXAxis, circlesGroup) {
 function getColor(d) {
   return d == 'Australia and New Zealand' ? '#00FFFF' :
         d == 'Central and Eastern Europe'  ? '#0000FF' :
-        d == 'Eastern Asia'  ? '#00A36C' :
+        d == 'Eastern Asia'  ? '#9900e6' :
         d == 'Latin America and Caribbean'   ? '#CCCCFF' :
         d == 'Middle East and Northern Africa'   ? '#E97451' :
         d == 'North America'   ? '#800000' :
         d == 'Southeastern Asia'   ? '#097969' :
         d == 'Southern Asia'   ? '#90EE90' :
-        d == 'Sub-Saharan Africa'   ? '#CC5500' :
+        d == 'Sub-Saharan Africa'   ? '#cccc00' :
         d == 'Western Europe'   ? '#DC143C' :
                     '#00FF00';
 }
+
+var keys = ['Australia and New Zealand','Central and Eastern Europe','Eastern Asia','Latin America and Caribbean','Middle East and Northern Africa','North America','Southeastern Asia','Southern Asia','Sub-Saharan Africa','Western Europe']
+
+// var color = d3.scaleOrdinal()
+//   .domain(keys)
+//   .range(d3.schemeset2);
 
 // Retrieve data from the CSV file and execute everything below
 d3.csv("country_data.csv").then(function(countryData, err) {
@@ -342,6 +348,18 @@ d3.csv("country_data.csv").then(function(countryData, err) {
     .attr("dy", "1em")
     .classed("axis-text", true)
     .text("Suicides per 100k (2015)");
+
+  // append the legend
+  svg.selectAll('mylabels')
+    .data(keys)
+    .enter()
+    .append('text')
+      .attr('x', 120)
+      .attr('y', function(d,i) {return 100 + i*25})
+      .style('fill', function(d) {return getColor(d)})
+      .text(function(d){return d})
+      .attr('text-anchor', 'left')
+      .style('alignment-baseline', 'middle')
 
   // updateToolTip function above csv import
   var circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
