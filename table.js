@@ -13,21 +13,39 @@ d3.csv('country_data.csv').then(function(data) {
     // var values = d3.keys(data.country);
 
     // Create a select element
-    var select = d3.select("body")
-        .append("select")
-        .on("change", function() {
-            console.log(this.value);
-        })
+    // var select = d3.select("body")
+    //     .append("select")
+    //     .on("change", function() {
+    //         console.log(this.value);
+    //     })
 
-    // Add an initial option:
-    select.append("option")
-        .html("Select Value:")
+    // // Add an initial option:
+    // select.append("option")
+    //     .html("Select Value:")
 
-    // Add the options:
-    var options = select.selectAll(null)
-        .data(data)
-        .enter()
-        .append("option")
-        .text(function(d) { return d.country; });
+    // // Add the options:
+    // var options = select.selectAll(null)
+    //     .data(data)
+    //     .enter()
+    //     .append("option")
+    //     .text(function(d) { return d.country; });
 
 })
+
+// When the user scrolls the page, execute myFunction
+window.onscroll = function() {myFunction()};
+
+// Get the navbar
+var navbar = document.getElementById("navbar");
+
+// Get the offset position of the navbar
+var sticky = navbar.offsetTop;
+
+// Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
+function myFunction() {
+  if (window.pageYOffset >= sticky) {
+    navbar.classList.add("sticky")
+  } else {
+    navbar.classList.remove("sticky");
+  }
+};

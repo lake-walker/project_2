@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    
     <style>
         .jumbotron {
             text-align: center;
@@ -15,21 +17,39 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="jumbotron">
-            <h1>Country Data</h1>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <table class="table table-striped">
-                    <thead>
-                        <tr><th>Country</th><th>GDP per Capita</th><th>Suicides per 100k</th><th>Happiness Index Score</th><th>Human Development Index</th></tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+  <div id="navbar">
+    <a href="mainpage.html">Home</a>
+    <a href="tableindex.html">Data</a>
+    <a href="index1.html">Bubble Chart</a>
+    <a href="apexchart.html">Bar Chart</a>
+    <a href="index.html">Map</a>
+  </div>
+        <div class='container'>
+          <div class='row'>
+              <div class='col-md-12'>
+                  <div class='col-md-12'>
+                      <h4>Data</h4>
+                      <hr>
+                      <p>The following table includes all of the data used for plotting during this project.</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="container">
+          <div class="jumbotron">
+              <h1>Country Data</h1>
+          </div>
+          <div class="row">
+              <div class="col-md-12">
+                  <table class="table table-striped">
+                      <thead>
+                          <tr><th>Country</th><th>GDP per Capita</th><th>Suicides per 100k</th><th>Happiness Index Score</th><th>Human Development Index</th></tr>
+                      </thead>
+                      <tbody></tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="table.js"></script>
 </body>
