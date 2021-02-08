@@ -133,19 +133,32 @@ var myMap = L.map("map", {
   }).addTo(myMap);
 
 
-d3.json('countries.geojson', function (data) {
-  d3.csv('country_data.csv', function (csv) {
+d3.json('countries.geojson').then(function (data) {
+  d3.csv('country_data.csv').then(function (csv) {
     var world = data.features;
+    console.log(world[39].properties.ADMIN);
+    console.log(csv);
     csv.forEach(function(d, i) {
       world.forEach(function(e, j) {
-        if (d.country === e.properties.ADMIN) {
-          e.properties.sui_per_100k_2015 = d.sui_per_100k_2015 
+        if (e.properties.ADMIN === d.country) {
+          e.properties.sui_per_100k_2015 = +d.sui_per_100k_2015 
         }
+        // else {
+        //   e.properties.sui_per_100k_2015 = 'N/A'
+        // }
       })
     })
-    
+    console.log(data);
+    L.geoJson(data, {
+      style: function(feature) {
+        return {
+          color: 'white',
+          fillColor: getColor(feature.properties.sui_per_100k_2015)
+        }
+      }
+    }).addTo(myMap);
   })
-  L.geoJson(data).addTo(myMap);
+  
 })
 
 
