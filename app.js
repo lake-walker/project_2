@@ -1,18 +1,18 @@
 
-// Map section of app creation
-// funcion to return marker size based on suicides
-// function SuicideMarkerSize(score) {
-//     return score * 10000;
-// }
-// function HappinessMarkerSize(happy) {
-//     return happy * 10000;
-// }
-// function gdpMarkerSize(happy) {
-//     return happy * 100000;
-// }
-// function hdiMarkerSize(happy) {
-//     return happy * 100000;
-// }
+// // Map section of app creation
+// // funcion to return marker size based on suicides
+// // function SuicideMarkerSize(score) {
+// //     return score * 10000;
+// // }
+// // function HappinessMarkerSize(happy) {
+// //     return happy * 10000;
+// // }
+// // function gdpMarkerSize(happy) {
+// //     return happy * 100000;
+// // }
+// // function hdiMarkerSize(happy) {
+// //     return happy * 100000;
+// // }
 
 
 
@@ -132,90 +132,93 @@ var myMap = L.map("map", {
     accessToken: API_KEY
   }).addTo(myMap);
 
-
 d3.json('countries.geojson').then(function (data) {
-  d3.csv('country_data.csv').then(function (csv) {
-    var world = data.features;
-    console.log(world[39].properties.ADMIN);
-    console.log(csv);
-    csv.forEach(function(d, i) {
-      world.forEach(function(e, j) {
-        if (e.properties.ADMIN === d.country) {
-          e.properties.sui_per_100k_2015 = +d.sui_per_100k_2015 
-        }
-        // else {
-        //   e.properties.sui_per_100k_2015 = 'N/A'
-        // }
+    d3.csv('country_data.csv').then(function (csv) {
+      var world = data.features;
+      console.log(world[39].properties.ADMIN);
+      console.log(csv);
+      csv.forEach(function(d, i) {
+        world.forEach(function(e, j) {
+          if (e.properties.ADMIN === d.country) {
+            e.properties.sui_per_100k_2015 = +d.sui_per_100k_2015,
+            e.properties.human_development_index = +d.human_development_index,
+            e.properties.economy_gdp_per_capita_2015 = +d.economy_gdp_per_capita_2015,
+            e.properties.happiness_score_2015 = +d.happiness_score_2015
+          }
+          // else {
+          //   e.properties.sui_per_100k_2015 = 'N/A'
+          // }
+        })
       })
-    })
-    console.log(data);
-    L.geoJson(data, {
-      style: function(feature) {
-        return {
-          color: 'white',
-          fillColor: getColor(feature.properties.sui_per_100k_2015)
+      console.log(data);
+      var sui_map = L.geoJson(data, {
+        style: function(feature) {
+          return {
+            color: 'white',
+            fillColor: getColor(feature.properties.sui_per_100k_2015)
+          }
         }
-      }
-    }).addTo(myMap);
+      })
+
+      var happy_map = L.geoJson(data, {
+        style: function(feature) {
+          return {
+            color: 'white',
+            fillColor: getColor(feature.properties.happiness_score_2015)
+          }
+        }
+      })
+
+      var gdp_map = L.geoJson(data, {
+        style: function(feature) {
+          return {
+            color: 'white',
+            fillColor: getColor(feature.properties.economy_gdp_per_capita_2015)
+          }
+        }
+      })
+
+      var hdi_map = L.geoJson(data, {
+        style: function(feature) {
+          return {
+            color: 'white',
+            fillColor: getColor(feature.properties.human_development_index)
+          }
+        }
+      })
+      var baseMaps = {
+        'Suicides per 100k': sui_map,
+        'Happiness Score': happy_map,
+        'GDP per Capita': gdp_map,
+        'Human Development Index': hdi_map
+      };
+
+      L.control.layers(baseMaps).addTo(myMap);
+      // gdp_map.addTo(myMap);
+    })
+    
   })
-  
-})
 
 
 
 
-// d3.csv('country_data.csv').then(function(data){
-//   function getColor(d) {
-//     return d > 10 ? '#00FFFF' :
-//           d > 7 ? '#0000FF' :
-//           d > 5 ? '#9900e6' :
-//           d > 3 ? '#CCCCFF' :
-//           d > 1 ? '#E97451' :
-//           d > 0 ? '#800000' :
-//           '#00FF00';
-//   }
-// });
+
+
+
 
 function getColor(d) {
   return d > 10 ? '#00FFFF' :
         d > 7 ? '#0000FF' :
         d > 5 ? '#9900e6' :
         d > 3 ? '#CCCCFF' :
-        d > 1 ? '#E97451' :
-        d > 0 ? '#800000' :
+        d > 1 ? 'yellow' :
+        d > 0 ? 'green' :
         'black';
 };
 
 var link = 'countries.geojson';
 
 
-// var sui_data = [];
-// d3.csv('country_data.csv').then(function(data){
-//   data.forEach(function(d) {
-//     d.happiness_score_2015 = +d.happiness_score_2015;
-//     d.sui_per_100k_2015 = +d.sui_per_100k_2015;
-//     d.economy_gdp_per_capita_2015 = +d.economy_gdp_per_capita_2015;
-//     d.human_development_index = +d.human_development_index;
-//   });
-//   // console.log(data[129].sui_per_100k_2015);
-  
-//   for (i=0; i<data.length; i++) {
-//     sui_data.push(data[i].sui_per_100k_2015);
-//   }
-//     console.log(getColor(sui_data));
-//     var mapStyle = {
-//       color: 'white',
-//       fillColor: sui_data.forEach,
-//       fillOpacity: 0.5,
-//       weight: 1.5
-//     };
-  
-//   d3.json('countries.geojson').then(function(geo){
-//     L.geoJson(geo,{
-//       style: mapStyle
-//     }).addTo(myMap);
-//   });
-// });
 
 
 
@@ -223,35 +226,7 @@ var link = 'countries.geojson';
 
 
 
-
-// var mapStyle = {
-//   color: 'white',
-//   fillColor: data.sui_per_100k_2015,
-//   fillOpacity: 0.5,
-//   weight: 1.5
-// };
-// var sui_data = [];
-// d3.json('countries.geojson').then(function(error, geo) {
-//   d3.csv('country_data.csv').then(function(data){
-//     for (i=0; i<data.length; i++) {
-//       sui_data.push(data[i].sui_per_100k_2015);
-//     };
-//     L.geoJson(geo,{
-//       style: function(d) {
-//         return {
-//           color: 'white',
-//           fillColor: getColor(sui_data)
-//         }
-//       }
-//     }).addTo(myMap);
-//   })
-// });
-
-
-// d3.json('countries.geojson').then(function(data){
-//     console.log(data);
-//     L.geoJson(data).addTo(myMap);
-// });
+// Creation of navbar
 
 // When the user scrolls the page, execute myFunction
 window.onscroll = function() {myFunction()};
