@@ -2,7 +2,7 @@
 
 // Outlines for every country
 var myMap = L.map("map", {
-    center: [40.7128, -74.0059],
+    center: [51.4934, -0.0098],
     zoom: 3
   });
   
@@ -54,7 +54,7 @@ d3.json('countries.geojson').then(function (data) {
       var gdpLegend = L.control({position: 'bottomright'});
       gdpLegend.onAdd = function (myMap) {
         var div = L.DomUtil.create('div','info legend'),
-          grades = [.01,0.2,0.5,0.9,1.25,1.5],
+          grades = [0.01,0.2,0.5,0.9,1.25,1.5],
           labels = [],
           from, to;
         for (var i = 0; i < grades.length; i++) {
@@ -88,7 +88,7 @@ d3.json('countries.geojson').then(function (data) {
       var hdiLegend = L.control({position: 'bottomright'});
       hdiLegend.onAdd = function (myMap) {
         var div = L.DomUtil.create('div','info legend'),
-          grades = [1,5,10,15,20,25],
+          grades = [0.3,0.5,0.6,0.7,0.8,0.9],
           labels = [],
           from, to;
         for (var i = 0; i < grades.length; i++) {
@@ -229,23 +229,36 @@ d3.json('countries.geojson').then(function (data) {
         'Human Development Index': hdi_map
       };
 
-      L.control.layers(baseMaps).addTo(myMap);
+      var overlayMaps = {};
+
+      L.control.layers(baseMaps, overlayMaps, {
+        collapsed: false,
+        position: 'bottomleft'
+      }).addTo(myMap);
+
+      suiLegend.addTo(myMap);
+      currentLegend = suiLegend;
 
       myMap.on('baselayerchange', function (eventLayer) {
+        console.log(eventLayer);
         if (eventLayer.name === 'Suicides per 100k') {
-          myMap.removeControl(happyLegend || hdiLegend || gdpLegend);
+          myMap.removeControl(currentLegend );
+          currentLegend = suiLegend;
           suiLegend.addTo(myMap);
         }
         else if (eventLayer.name === 'Happiness Score') {
-          myMap.removeControl(suiLegend || hdiLegend || gdpLegend);
+          myMap.removeControl(currentLegend );
+          currentLegend = happyLegend;
           happyLegend.addTo(myMap);
         }
         else if (eventLayer.name === 'GDP per Capita') {
-          myMap.removeControl(happyLegend || hdiLegend || suiLegend);
+          myMap.removeControl(currentLegend );
+          currentLegend = gdpLegend;
           gdpLegend.addTo(myMap);
         }
         else if (eventLayer.name === 'Human Development Index') {
-          myMap.removeControl(happyLegend || suiLegend || gdpLegend);
+          myMap.removeControl(currentLegend );
+          currentLegend = hdiLegend;
           hdiLegend.addTo(myMap);
         }
         
@@ -262,6 +275,7 @@ d3.json('countries.geojson').then(function (data) {
 
 
 function getSUIColor(d) {
+  // console.log(d);
   return d > 25 ? '#00FFFF' :
         d > 20 ? '#0000FF' :
         d > 15 ? '#9900e6' :
@@ -292,6 +306,7 @@ function getHappyColor(d) {
 };
 
 function getHDIColor(d) {
+  // console.log(d);
   return d > 0.9 ? '#00FFFF' :
         d > 0.8 ? '#0000FF' :
         d > 0.7 ? '#9900e6' :
@@ -302,13 +317,6 @@ function getHDIColor(d) {
 };
 
 var link = 'countries.geojson';
-
-
-
-
-
-
-
 
 
 // Creation of navbar
