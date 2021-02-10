@@ -34,12 +34,81 @@ d3.json('countries.geojson').then(function (data) {
           // }
         })
       })
+      var suiLegend = L.control({position: 'bottomright'});
+      suiLegend.onAdd = function (myMap) {
+        var div = L.DomUtil.create('div','info legend'),
+          grades = [1,5,10,15,20,25],
+          labels = [],
+          from, to;
+        for (var i = 0; i < grades.length; i++) {
+          from = grades[i];
+          to = grades[i + 1];
+
+          labels.push(
+            '<i style="background:' + getSUIColor(from + 1) + '"></i>' + from + (to ? '&ndash;' + to : '+')
+          );
+        }
+        div.innerHTML = labels.join('<br>');
+        return div;
+      };
+      var gdpLegend = L.control({position: 'bottomright'});
+      gdpLegend.onAdd = function (myMap) {
+        var div = L.DomUtil.create('div','info legend'),
+          grades = [.01,0.2,0.5,0.9,1.25,1.5],
+          labels = [],
+          from, to;
+        for (var i = 0; i < grades.length; i++) {
+          from = grades[i];
+          to = grades[i + 1];
+
+          labels.push(
+            '<i style="background:' + getGDPColor(from + 1) + '"></i>' + from + (to ? '&ndash;' + to : '+')
+          );
+        }
+        div.innerHTML = labels.join('<br>');
+        return div;
+      };
+      var happyLegend = L.control({position: 'bottomright'});
+      happyLegend.onAdd = function (myMap) {
+        var div = L.DomUtil.create('div','info legend'),
+          grades = [2,3,4,5,6,7],
+          labels = [],
+          from, to;
+        for (var i = 0; i < grades.length; i++) {
+          from = grades[i];
+          to = grades[i + 1];
+
+          labels.push(
+            '<i style="background:' + getHappyColor(from + 1) + '"></i>' + from + (to ? '&ndash;' + to : '+')
+          );
+        }
+        div.innerHTML = labels.join('<br>');
+        return div;
+      };
+      var hdiLegend = L.control({position: 'bottomright'});
+      hdiLegend.onAdd = function (myMap) {
+        var div = L.DomUtil.create('div','info legend'),
+          grades = [1,5,10,15,20,25],
+          labels = [],
+          from, to;
+        for (var i = 0; i < grades.length; i++) {
+          from = grades[i];
+          to = grades[i + 1];
+
+          labels.push(
+            '<i style="background:' + getHDIColor(from + 1) + '"></i>' + from + (to ? '&ndash;' + to : '+')
+          );
+        }
+        div.innerHTML = labels.join('<br>');
+        return div;
+      };
+
       console.log(data);
       var sui_map = L.geoJson(data, {
         style: function(feature) {
           return {
             color: 'white',
-            fillColor: getColor(feature.properties.sui_per_100k_2015)
+            fillColor: getSUIColor(feature.properties.sui_per_100k_2015)
           };
         },
         onEachFeature: function(feature, layer) {
@@ -68,7 +137,7 @@ d3.json('countries.geojson').then(function (data) {
         style: function(feature) {
           return {
             color: 'white',
-            fillColor: getColor(feature.properties.happiness_score_2015),
+            fillColor: getHappyColor(feature.properties.happiness_score_2015),
             fillOpacity: 0.5,
             weight: 1.5
           };
@@ -93,13 +162,14 @@ d3.json('countries.geojson').then(function (data) {
           });
           layer.bindPopup("<h1>" + feature.properties.ADMIN + "</h1> <hr> <h2>" + feature.properties.sui_per_100k_2015 + "</h2>");
         }
+        
       });
 
       var gdp_map = L.geoJson(data, {
         style: function(feature) {
           return {
             color: 'white',
-            fillColor: getColor(feature.properties.economy_gdp_per_capita_2015)
+            fillColor: getGDPColor(feature.properties.economy_gdp_per_capita_2015)
           };
         },
         onEachFeature: function(feature, layer) {
@@ -128,7 +198,7 @@ d3.json('countries.geojson').then(function (data) {
         style: function(feature) {
           return {
             color: 'white',
-            fillColor: getColor(feature.properties.human_development_index)
+            fillColor: getHDIColor(feature.properties.human_development_index)
           };
         },
         onEachFeature: function(feature, layer) {
@@ -160,7 +230,26 @@ d3.json('countries.geojson').then(function (data) {
       };
 
       L.control.layers(baseMaps).addTo(myMap);
-      // gdp_map.addTo(myMap);
+
+      myMap.on('baselayerchange', function (eventLayer) {
+        if (eventLayer.name === 'Suicides per 100k') {
+          myMap.removeControl(happyLegend || hdiLegend || gdpLegend);
+          suiLegend.addTo(myMap);
+        }
+        else if (eventLayer.name === 'Happiness Score') {
+          myMap.removeControl(suiLegend || hdiLegend || gdpLegend);
+          happyLegend.addTo(myMap);
+        }
+        else if (eventLayer.name === 'GDP per Capita') {
+          myMap.removeControl(happyLegend || hdiLegend || suiLegend);
+          gdpLegend.addTo(myMap);
+        }
+        else if (eventLayer.name === 'Human Development Index') {
+          myMap.removeControl(happyLegend || suiLegend || gdpLegend);
+          hdiLegend.addTo(myMap);
+        }
+        
+      });
     })
     
   })
@@ -172,13 +261,43 @@ d3.json('countries.geojson').then(function (data) {
 
 
 
-function getColor(d) {
-  return d > 10 ? '#00FFFF' :
-        d > 7 ? '#0000FF' :
+function getSUIColor(d) {
+  return d > 25 ? '#00FFFF' :
+        d > 20 ? '#0000FF' :
+        d > 15 ? '#9900e6' :
+        d > 10 ? '#CCCCFF' :
+        d > 5 ? 'yellow' :
+        d > 1 ? 'green' :
+        'black';
+};
+
+function getGDPColor(d) {
+  return d > 1.5 ? '#00FFFF' :
+        d > 1.25 ? '#0000FF' :
+        d > 0.9 ? '#9900e6' :
+        d > 0.5 ? '#CCCCFF' :
+        d > 0.2 ? 'yellow' :
+        d > 0.01 ? 'green' :
+        'black';
+};
+
+function getHappyColor(d) {
+  return d > 7 ? '#00FFFF' :
+        d > 6 ? '#0000FF' :
         d > 5 ? '#9900e6' :
-        d > 3 ? '#CCCCFF' :
-        d > 1 ? 'yellow' :
-        d > 0 ? 'green' :
+        d > 4 ? '#CCCCFF' :
+        d > 3 ? 'yellow' :
+        d > 2 ? 'green' :
+        'black';
+};
+
+function getHDIColor(d) {
+  return d > 0.9 ? '#00FFFF' :
+        d > 0.8 ? '#0000FF' :
+        d > 0.7 ? '#9900e6' :
+        d > 0.6 ? '#CCCCFF' :
+        d > 0.5 ? 'yellow' :
+        d > 0.3 ? 'green' :
         'black';
 };
 
