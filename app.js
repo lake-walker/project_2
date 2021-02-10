@@ -65,8 +65,7 @@ d3.json('countries.geojson').then(function (data) {
           to = grades[i + 1];
 
           labels.push(
-            '<i style="background:' + getGDPColor(from + 1) + '"></i>' + from + (to ? '&ndash;' + to : '+')
-          );
+            '<i style="background:' + getGDPColor(grades[i]) + '"></i>' + (grades[i] ?  grades[i] + '<br>' : '+'));
         }
         div.innerHTML = labels.join('<br>');
         return div;
@@ -96,7 +95,7 @@ d3.json('countries.geojson').then(function (data) {
           
         for (var i = 0; i < grades.length; i++) {
           div.innerHTML +=
-            '<i style="background:' + getHDIColor(grades[i] + 1) + '"></i>' + grades[i] + (grades[i+1] ? '&ndash;' + grades[i+1] + '<br>' : '+')
+            '<i style="background:' + getHDIColor(grades[i]) + '"></i>' + (grades[i] ?  grades[i] + '<br>' : '+')
           
         }
         return div;
