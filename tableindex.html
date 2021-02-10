@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Data</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     
@@ -41,9 +41,9 @@
           </div>
           <div class="row">
               <div class="col-md-12">
-                  <table class="table table-striped">
+                  <table class="sortable">
                       <thead>
-                          <tr><th>Country</th><th>GDP per Capita</th><th>Suicides per 100k</th><th>Happiness Index Score</th><th>Human Development Index</th></tr>
+                          <tr><th>Country </th> <th class='sorttable_numeric'>GDP per Capita  |</th> <th class='sorttable_numeric'>Suicides per 100k  |</th> <th class='sorttable_numeric'>Happiness Index Score  |</th> <th>Human Development Index  |</th> <th class='sorttable_numeric'>Happiness Rank  |</th> <th class='sorttable_numeric'>HDI Rank  |</th></tr>
                       </thead>
                       <tbody></tbody>
                   </table>
@@ -51,6 +51,7 @@
           </div>
       </div>
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="sortable.js"></script>
     <script src="table.js"></script>
 </body>
 
