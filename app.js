@@ -2,8 +2,8 @@
 
 // Outlines for every country
 var myMap = L.map("map", {
-    center: [51.4934, -0.0098],
-    zoom: 3
+    center: [25.0000, -0.0098],
+    zoom: 2
   });
   
   // Adding tile layer

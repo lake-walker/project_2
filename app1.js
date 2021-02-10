@@ -1,6 +1,6 @@
 // Bubble Chart
-var svgWidth = 2000;
-var svgHeight = 1000;
+var svgWidth = 1500;
+var svgHeight = 650;
 
 var margin = {
   top: 20,
@@ -217,7 +217,7 @@ d3.csv("country_data.csv").then(function(countryData, err) {
     .enter()
     .append('text')
       .attr('x', 120)
-      .attr('y', function(d,i) {return 100 + i*25})
+      .attr('y', function(d,i) {return 35 + i*25})
       .style('fill', function(d) {return getColor(d)})
       .text(function(d){return d})
       .attr('text-anchor', 'left')
