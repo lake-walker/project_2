@@ -1,4 +1,4 @@
-d3.csv('country_data.csv').then(function(data) {
+d3.csv('data/country_data.csv').then(function(data) {
     d3.select("tbody")
         .selectAll("tr")
         .data(data)

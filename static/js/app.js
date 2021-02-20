@@ -17,8 +17,8 @@ var myMap = L.map("map", {
   }).addTo(myMap);
 
 // bring in the geojson data as well as the csv country data for mapping
-d3.json('countries.geojson').then(function (data) {
-    d3.csv('country_data.csv').then(function (csv) {
+d3.json('data/countries.geojson').then(function (data) {
+    d3.csv('data/country_data.csv').then(function (csv) {
       var world = data.features;
       console.log(world[39].properties.ADMIN);
       console.log(csv);
@@ -324,7 +324,7 @@ function getHDIColor(d) {
 
 console.log(getHDIColor(0.55));
 
-var link = 'countries.geojson';
+var link = 'data/countries.geojson';
 
 
 // Creation of navbar

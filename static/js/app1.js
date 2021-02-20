@@ -130,7 +130,7 @@ var keys = ['Australia and New Zealand','Central and Eastern Europe','Eastern As
 //   .range(d3.schemeset2);
 
 // Retrieve data from the CSV file and execute everything below
-d3.csv("country_data.csv").then(function(countryData, err) {
+d3.csv("data/country_data.csv").then(function(countryData, err) {
   if (err) throw err;
   console.log(countryData);
 
